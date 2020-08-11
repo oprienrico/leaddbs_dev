@@ -175,7 +175,6 @@ if hmchanged
     wmboundary = unique(faces(:))';
     % end replace.
 
-
     if vizz
         figure
         hold on
@@ -195,7 +194,7 @@ if hmchanged
         mesh.pnt=mesh.pnt/1000; % in meter
         mesh.unit='m';
     end
- %   plot3(mesh.pnt(:,1),mesh.pnt(:,2),mesh.pnt(:,3),'c.');
+    % plot3(mesh.pnt(:,1),mesh.pnt(:,2),mesh.pnt(:,3),'c.');
     %% calculate volume conductor
     ea_dispt('Creating volume conductor...');
 
@@ -361,9 +360,6 @@ indices=unique(indices(2:end-1));
 indices(indices==0)=[];
 indices(indices>length(midpts))=[];
 
-
-
-
 [vatfv,vatvolume,radius]=ea_write_vta_nii(S,stimname,midpts,indices,elspec,dpvx,voltix,constvol,thresh,mesh,gradient,side,resultfig,options);
 % transform midpts to template if necessary:
 if options.native==1 % if we calculated in native space -> now transform back to MNI
@@ -372,9 +368,9 @@ if options.native==1 % if we calculated in native space -> now transform back to
         varargout{1}=vatfv;
         varargout{2}=vatvolume;
         varargout{3}=radius;
-        ea_dispt(''); % stop chain of timed processes.        
+        ea_dispt(''); % stop chain of timed processes.
     end
-    % convert to MNI    
+    % convert to MNI
     [~,anatpresent] = ea_assignpretra(options);
     c = ea_mm2vox([dpvx;midpts], [options.root,options.patientname,filesep,anatpresent{1}]);
     c = ea_map_coords(c', [options.root,options.patientname,filesep,anatpresent{1}], ...
@@ -392,7 +388,7 @@ if options.native==1 % if we calculated in native space -> now transform back to
         varargout{3}=radius;
         ea_dispt(''); % stop chain of timed processes.
     end
-    
+
 else % calculated in MNI space directly
             % define function outputs
         varargout{1}=vatfv;

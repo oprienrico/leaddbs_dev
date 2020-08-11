@@ -121,9 +121,8 @@ setappdata(handles.stimfig,'stimparams',stimparams); % store stimulation setting
 % setup modelselect popup
 
 cnt=1;
-earoot=[ea_getearoot];
 
-ndir=dir([earoot,'ea_genvat_*.m']);
+ndir=dir([ea_getearoot,'ea_genvat_*.m']);
 if strcmp(options.leadprod, 'group')
     isdirected=0; % for now allow everything in lead group
 else

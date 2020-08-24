@@ -11,7 +11,6 @@ if nargin==5
     options=varargin{4};
     stimname=varargin{5};
     thresh=options.prefs.machine.vatsettings.horn_ethresh; %0.2;
-
 elseif nargin==7
     acoords=varargin{1};
     S=varargin{2};
@@ -42,9 +41,7 @@ if ~any(S.activecontacts{side}) % empty VAT, no active contacts.
     return
 end
 
-
 %% get electrodes handles // initial parameters:
-
 resultfig=getappdata(lgfigure,'resultfig');
 
 % Important to load in reco from a new since we need to decide whether to
@@ -103,13 +100,6 @@ if hmchanged
                 end
             case 'tpm'
                 c1=ea_load_nii([ea_space(options),'TPM.nii,1']);
-                %                 voxnbcyl=c1.mat\[nbcyl,ones(length(nbcyl),1)]';
-                %                 voxnbcyl=voxnbcyl(1:3,:)';
-                %                 cyl=surf2vol(voxnbcyl,fbcyl,1:size(c1.img,2),1:size(c1.img,1),1:size(c1.img,3));
-                %                 cyl=imfill(cyl,'holes');
-                %
-                %                 cyl=double(smooth3(cyl,'gaussian',[3 3 3]));
-                %                 c1.img=c1.img.*permute(cyl,[2,1,3]);
                 fv=isosurface(c1.img,0.5,'noshare');
                 fv.vertices=c1.mat*[fv.vertices,ones(length(fv.vertices),1)]';
                 fv.vertices=fv.vertices(1:3,:)';
@@ -121,7 +111,6 @@ if hmchanged
     end
 
     [elfv,ntissuetype,Y,electrode]=ea_buildelfv(elspec,elstruct,side);
-
     Ymod=Y;
     success=0;
     for attempt=1:4 % allow four attempts with really small jitters in case scene generates intersecting faces FIX ME this needs a better solution
@@ -194,7 +183,7 @@ if hmchanged
         mesh.pnt=mesh.pnt/1000; % in meter
         mesh.unit='m';
     end
-    % plot3(mesh.pnt(:,1),mesh.pnt(:,2),mesh.pnt(:,3),'c.');
+	% plot3(mesh.pnt(:,1),mesh.pnt(:,2),mesh.pnt(:,3),'c.');
     %% calculate volume conductor
     ea_dispt('Creating volume conductor...');
 
@@ -221,13 +210,11 @@ if hmchanged
     end
     save([options.root,options.patientname,filesep,'current_headmodel',filesep,ea_nt(options),'headmodel',num2str(side),'.mat'],'vol','mesh','centroids','wmboundary','elfv','meshregions','-v7.3');
     ea_save_hmprotocol(options,side,elstruct,1);
-
 else
     % simply load vol.
     ea_dispt('Loading headmodel...');
     load([options.root,options.patientname,filesep,'current_headmodel',filesep,ea_nt(options),'headmodel',num2str(side),'.mat']);
     activeidx=ea_getactiveidx(S,side,centroids,mesh,elfv,elspec,meshregions);
-
 end
 
 switch side
@@ -274,7 +261,6 @@ for source=S.sources
         end
         %ix=knnsearch(vol.pos,dpvx/SIfx); % add dpvx/1000 for m
 
-
         if any(volts>0)
             unipolar=0;
             U=U/2;
@@ -291,7 +277,6 @@ for source=S.sources
             voltix=[voltix;repmat(U(ac),length(activeidx(source).con(ac).ix),1),...
                 repmat(cnt,length(activeidx(source).con(ac).ix),1)];
             cnt=cnt+1;
-
         end
 
         if isempty(ix)
@@ -328,11 +313,9 @@ for source=S.sources
         tmp = sort(abs(gradient{source}),'descend');
         gradient{source}(elec_tet_ix,:) = repmat(mean(tmp(1:ceil(length(tmp(:,1))*0.001),:)),[length(elec_tet_ix),1]); % choose mean of highest 0.1% as new efield value
         clear tmp
-
     else % empty source..
         gradient{source}=zeros(size(vol.tet,1),3);
     end
-
 end
 
 gradient=gradient{1}+gradient{2}+gradient{3}+gradient{4}; % combined gradient from all sources.
@@ -341,9 +324,7 @@ vol.pos=vol.pos*SIfx; % convert back to mm.
 
 midpts=mean(cat(3,vol.pos(vol.tet(:,1),:),vol.pos(vol.tet(:,2),:),vol.pos(vol.tet(:,3),:),vol.pos(vol.tet(:,4),:)),3); % midpoints of each pyramid
 
-
 reduc=10;
-
 
 % generate flowfield visualization:
 % generate a jittered indices vector to be used to reduce flowfield
@@ -404,7 +385,6 @@ function changed=ea_headmodel_changed(options,side,elstruct)
 % headmodel needs to be recalculated..
 changed=1; % in doubt always reconstruct headmodel
 
-
 if isequaln(ea_load_hmprotocol(options,side),ea_save_hmprotocol(options,side,elstruct,0)) % important to use isequaln if not nans are treated as not equal...
     changed=0;
 end
@@ -458,7 +438,6 @@ if constvol
     dirival = zeros(size(vol.pos,1),1);
     dirival(elec) = val(:,1);
 else
-
     if unipolar
         dirinodes = boundarynodes;
     else
@@ -472,13 +451,11 @@ else
         elec_center_id = ea_find_elec_center(elec,vol.pos);
         rhs(elec_center_id) = val(1,1);
     else
-
         for v=1:length(uvals)
         elec_center_id = ea_find_elec_center(elec(val(:,2)==uvals(v)),vol.pos);
         thesevals=val(val(:,2)==uvals(v),1);
         rhs(elec_center_id) = thesevals(1);
         end
-
         %warning('Bipolar constant current stimulation currently not implemented!');
     end
 end
@@ -495,11 +472,6 @@ center = mean(pos(elec,:));
 dist_center = sqrt(sum((pos(elec,:)-repmat(center,length(elec),1)).^2,2));
 [dist, elec_id] = min(dist_center);
 center_id = elec(elec_id);
-
-
-
-
-
 
 
 function [stiff,rhs] = ea_dbs(stiff,rhs,dirinodes,dirival)

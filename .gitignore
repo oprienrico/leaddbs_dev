@@ -16,6 +16,9 @@
 CMakeLists.txt
 
 gibsconnect*.mat
+common/ea_recentpatients.mat
+#folders
+templates/
 fibers/
 release/
 tmp/

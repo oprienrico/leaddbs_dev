@@ -27,7 +27,8 @@ else
 end
 
 for iside=1:length(options.sides)
-    side=options.sides(iside)
+    side=options.sides(iside);
+    
     cnt=1;
     for sub=1:length(elstruct)
         for cont=1:size(options.d3.isomatrix{1},2)

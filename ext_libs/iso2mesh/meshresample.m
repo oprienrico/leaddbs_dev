@@ -38,6 +38,9 @@ function [node,elem]=domeshsimplify(v,f,keepratio)
 
   saveoff(v,f,mwpath('pre_remesh.off'));
   deletemeshfile(mwpath('post_remesh.off'));
-  system([' "' mcpath('cgalsimp2') exesuff '" "' mwpath('pre_remesh.off') '" ' num2str(keepratio) ' "' mwpath('post_remesh.off') '"']);
+  cmd_str=[' "' mcpath('cgalsimp2') exesuff '" "' mwpath('pre_remesh.off') '" ' num2str(keepratio) ' "' mwpath('post_remesh.off') '"'];
+  system(cmd_str);
+  %[ res, out, err ] = jsystem(cmd_str);
+  
   [node,elem]=readoff(mwpath('post_remesh.off'));
 end

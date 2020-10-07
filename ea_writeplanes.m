@@ -72,9 +72,32 @@ else
 end
 
 if isstruct(elstruct)
-    for side=1:length(ave_coords_mm)
-        coords{side}=Vtra.mat\[ave_coords_mm{side},ones(size(ave_coords_mm{side},1),1)]';
-        coords{side}=coords{side}(1:3,:)';
+    coords={};
+    %find maximum side of coordinates (3 columns by ?? rows/contacts)
+    num_contacts=nan;
+    num_axes=nan;
+    for iside=1:length(ave_coords_mm)
+        side=iside;%just for readability, as this is the side
+        if ~isempty(ave_coords_mm{side})
+            num_contacts=size(ave_coords_mm{side},1);
+            num_axes=size(ave_coords_mm{side},2);
+            break;
+        end
+    end
+    if isnan(num_contacts) || isnan(num_axes)
+        error('This should not happen, is there no electrode set yet? Remember to run the electrode/lead reconstruction first (Panel 5)');
+    end
+    
+    for iside=1:length(ave_coords_mm)
+        %side=options.sides(iside);
+        side=iside;%just for readability, as this is the side
+        if ~isempty(ave_coords_mm{side})
+            coords{side}=Vtra.mat\[ave_coords_mm{side},ones(size(ave_coords_mm{side},1),1)]';
+            coords{side}=coords{side}(1:3,:)';
+        else
+            %fill with nans, to leave a placeholder for no contact/electrode/lead
+            coords{side}=nan(num_contacts,num_axes);
+        end
     end
 else
     elstruct=[elstruct,1]';
@@ -86,8 +109,9 @@ end
 %XYZ_src_vx = src.mat \ XYZ_mm;
 
 fid=fopen([options.root,options.patientname,filesep,'cuts_export_coordinates.txt'],'w');
-for side=1:length(options.sides)
-    %% write out axial images
+for iside=1:length(options.sides)
+    side=options.sides(iside);
+    %% write out axial/coronal/sagittal images
     for tracor=find(tracorpresent)'
         for elcnt=1:(options.elspec.numel-options.shifthalfup)
             if ~isstruct(elstruct)

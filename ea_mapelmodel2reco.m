@@ -17,14 +17,15 @@ else
     end
 end
 if redomarkers
-    for iside=options.sides
-        elstruct.markers(iside).head=elstruct.coords_mm{iside}(1,:);
-        elstruct.markers(iside).tail=elstruct.coords_mm{iside}(4,:);
+    for iside=1:length(options.sides)
+        side=options.sides(iside);
+        elstruct.markers(side).head=elstruct.coords_mm{side}(1,:);
+        elstruct.markers(side).tail=elstruct.coords_mm{side}(4,:);
 
-        normtrajvector=(elstruct.markers(iside).tail-elstruct.markers(iside).head)./norm(elstruct.markers(iside).tail-elstruct.markers(iside).head);
+        normtrajvector=(elstruct.markers(side).tail-elstruct.markers(side).head)./norm(elstruct.markers(side).tail-elstruct.markers(side).head);
         orth=null(normtrajvector)*(options.elspec.lead_diameter/2);
-        elstruct.markers(iside).x=elstruct.coords_mm{iside}(1,:)+orth(:,1)';
-        elstruct.markers(iside).y=elstruct.coords_mm{iside}(1,:)+orth(:,2)'; % corresponding points in reality
+        elstruct.markers(side).x=elstruct.coords_mm{side}(1,:)+orth(:,1)';
+        elstruct.markers(side).y=elstruct.coords_mm{side}(1,:)+orth(:,2)'; % corresponding points in reality
     end
 end
 

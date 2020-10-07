@@ -1,5 +1,16 @@
-LEAD-DBS
+LEAD-DBS ___mod! (UNOFFICIAL fork/modified version)
 ========
+
+## this LEAD DBS version was modified to enable full support of the cases with unilateral DBS leads
+Refer to modREADME.md for the files that were modified.
+For installation follow the same steps listed below at "Development installation"
+
+## What works
+In single patient mode fixed the track reconstruction and 2D plot (e.g. case with only left lead)
+In group mode fixed 3D plot.
+The VAT computation fix is still a work in progress for the unilateral cse.
+
+# ORIGINAL CONTENT OF README
 
 LEAD-DBS is ***NOT*** intended for clinical use!
 

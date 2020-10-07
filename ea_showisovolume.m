@@ -26,7 +26,8 @@ else
     ea_error('Isomatrix has wrong size. Please specify a correct matrix.')
 end
 
-for side=1:length(options.sides)
+for iside=1:length(options.sides)
+    side=options.sides(iside)
     cnt=1;
     for sub=1:length(elstruct)
         for cont=1:size(options.d3.isomatrix{1},2)

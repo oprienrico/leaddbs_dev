@@ -18,7 +18,7 @@ end
 
 load([ea_getearoot,'templates',filesep,'electrode_models',filesep,options.elspec.matfname]);
 %for side=1:length(markers)
-for iside=1:length(markers)
+for iside=1:length(options.sides)
     side=options.sides(iside);
 
     if resize

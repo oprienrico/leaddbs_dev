@@ -30,6 +30,8 @@ changed the following files to have support for unilateral:
     root/ea_write.m
     root/ea_writeplanes.m
 
+    root/ea_runpacer.m -> now handles unilateral left lead
+
     root/connectomics/ea_cvshowfiberconnectivities.m
     root/connectomics/ea_cvshowvatfmri.m
     root/connectomics/ea_extract_timecourses_vat.m
@@ -60,8 +62,3 @@ changed the following files to have support for unilateral:
     root/templates/electrode_models/ea_elspec_sde_08_s8_legacy.m
     root/templates/electrode_models/ea_elspec_stjude_activetip_2mm.m
     root/templates/electrode_models/ea_elspec_stjude_activetip_3mm.m
-
-    #TODO: check if you need to change:
-    ea_autocoord.m
-        as it selects by default the first coordinate, which may be empty: 
-        options.elside=options.sides(1);

@@ -1,19 +1,22 @@
-Mod spearheaded by Enrico Opri. Emory University (2020)
-changed the following files to have support for unilateral:
+## Mod spearheaded by Enrico Opri. Emory University (2020)
+changed the following files to have support for unilateral (DBS) leads:
     
-    #improving handling of elmodel
-    #added new helper elmodel=ea_get_unique_elmodel(reco.props)
+## improving handling of elmodel
+### added new helper elmodel=ea_get_unique_elmodel(reco.props)
+```
     root/helpers/gui/ea_load_pts.m
     root/ea_load_reconstruction.m
     root/templates/electrode_models/ea_resolve_elspec.m
 
     root/ea_write_planes.m   -> the coord cell array is set to fill out the empty coordinates with NaN, to ensure compatibility with ea_sample_slice.m
     root/ea_sample_slice.m   -> modification was not strictly necessary, but done to ensure compatibility
-
-    #fixed handling of statistics warnings in the unilateral case (which lead dbs sees as missing side==1, Right side, making part of the code fail). 
+```
+fixed handling of statistics warnings in the unilateral case (which lead dbs sees as missing side==1, Right side, making part of the code fail). 
+```
     root/ea_showatlas.m
-
-    #changed handling of options.sides
+```
+## changed handling of options.sides
+```
     TO TEST WELL: ea_calc_vatstats.m
 
     root/ea_reconstruction2acpc.m
@@ -29,17 +32,17 @@ changed the following files to have support for unilateral:
     root/ea_stimparams.m
     root/ea_write.m
     root/ea_writeplanes.m
-
-    root/ea_runpacer.m -> now handles unilateral left lead
+    root/helpers/gui/ea_elvisible.m
 
     root/connectomics/ea_cvshowfiberconnectivities.m
     root/connectomics/ea_cvshowvatfmri.m
     root/connectomics/ea_extract_timecourses_vat.m
 
-    root/helpers/gui/ea_elvisible.m
-
-    #this is one of the keypoints for the issue: the electrode models store the coordinates 
-    #in an hardcoded scheme of R for side==1 and L for side==2, in options.sides
+    root/ea_runpacer.m -> now handles unilateral left lead
+```
+this is one of the keypoints for the issue: the electrode models store the coordinates 
+in an hardcoded scheme of R for side==1 and L for side==2, in options.sides
+```
     root/templates/electrode_models/ea_elspec_adtech_sd10r_sp05x_choi.m
     root/templates/electrode_models/ea_elspec_boston_vercise.m
     root/templates/electrode_models/ea_elspec_dixi_d08_18am.m
@@ -62,3 +65,11 @@ changed the following files to have support for unilateral:
     root/templates/electrode_models/ea_elspec_sde_08_s8_legacy.m
     root/templates/electrode_models/ea_elspec_stjude_activetip_2mm.m
     root/templates/electrode_models/ea_elspec_stjude_activetip_3mm.m
+```
+## adding custom script loader (loaded at the init of lead.m)
+### the script loaded is : ea_run_extra_leadinitscript.m
+here it can handle extra path requirements, such as the exclusion (now default) or inclusion of the package libstdc++.so.6 for unix systems
+```
+ (un) loaded by : ea_run_extra_leadinitscript.m
+```
+The preferred action is to install the package matlab-support (on linux/ubuntu), and choose to use system libraries/renaming matlab ones. This is to use a complete toolchain that is fully available in the system.

@@ -2,7 +2,7 @@ LEAD-DBS ___mod! (UNOFFICIAL fork/modified version)
 ========
 
 ## this LEAD DBS version was modified to enable full support of the cases with unilateral DBS leads
-Refer to modREADME.md for the files that were modified.
+Refer to [modREADME.md](/modREAME.md) for the files that were modified.
 For installation follow the same steps listed below at "Development installation"
 
 ## What works

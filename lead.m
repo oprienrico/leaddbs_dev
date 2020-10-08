@@ -82,6 +82,9 @@ ea_checkspm;
 % check existence of directories
 ea_checkleaddirs;
 
+% run extra script for custom commands
+ea_run_extra_leadinitscript;
+
 % check for commands first
 if nargin == 4
     switch lower(varargin{1})

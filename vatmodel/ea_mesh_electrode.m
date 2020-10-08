@@ -133,7 +133,13 @@ if ~isempty(fv) % use atlas to define GM
             if precision
                no=round(no*precision)/precision; 
             end
-            
+
+            %Repair/ensure it is manifold before resample.
+            %This is because the adaptive-mesh-decimating algorithm reducepath
+            %can lead to have non-manifold output, which causes an issue
+            %with the resampling with the CGAL tool (included in iso2mesh)
+            %For now it is not needed as meshresample runs it internally: [no,fo]=meshcheckrepair(no,fo);
+        
             [no,fo]=meshresample(no,fo,nucleidecimate); % mesh is too dense, reduce the density by 80%
             [no,fo]=meshcheckrepair(no,fo,'dup'); % clean topological defects
            

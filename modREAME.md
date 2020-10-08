@@ -73,3 +73,16 @@ here it can handle extra path requirements, such as the exclusion (now default) 
  (un) loaded by : ea_run_extra_leadinitscript.m
 ```
 The preferred action is to install the package matlab-support (on linux/ubuntu), and choose to use system libraries/renaming matlab ones. This is to use a complete toolchain that is fully available in the system.
+
+
+## bugfix for meshresample in the iso2mesh toolbox
+### used by vatmodel
+The issue is caused by part of the code that uses matlab's reducepath before running meshresample.
+Matlab's reducepath can cause an output that is non-manifold, even if the input is manifold.
+This causes issues in the CGAL tool "cgalsimp2" used for the resampling in the iso2mex.
+The bugfix is to ensure that the input is manifold, by forcing the meshcheckrepair within meshresample, which repairs the mesh ensuring the manifold condition.
+I've also left alternative code (currently not used) to execute meshresample based only on reducepath, but repairing the output to ensuring the manifold condition.
+
+Changed: 
+    root/ext_libs/iso2mesh/meshresample.m
+    root/vatmodel/ea_mesh_electrode.m -> just left a note/comment

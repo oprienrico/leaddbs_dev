@@ -92,7 +92,7 @@ end
 
 [ea_stats,thisstim]=ea_assignstimcnt(ea_stats,S);
 
-if isstruct(VAT{1}.VAT) || isstruct(VAT{2}.VAT) % e.g. simbio model used
+if (isfield(VAT{1},'VAT') && isstruct(VAT{1}.VAT)) || (isfield(VAT{2},'VAT') && isstruct(VAT{2}.VAT)) % e.g. simbio model used
     vat=1;
     %for side=1:length(options.sides)
     for iside=1:length(options.sides)

@@ -200,8 +200,8 @@ if ~strcmp(options.leadprod, 'group')
             stimparams(1,1).volume = vatvolume;
         elseif  exist([options.root,options.patientname,filesep,'stimulations',filesep,ea_nt(options),label,filesep,'vat_left.mat'],'file') == 2
             load([options.root,options.patientname,filesep,'stimulations',filesep,ea_nt(options),label,filesep,'vat_left.mat']);
-            stimparams(1,1).VAT.VAT = vatfv;
-            stimparams(1,1).volume = vatvolume;
+            stimparams(1,2).VAT.VAT = vatfv;
+            stimparams(1,2).volume = vatvolume;
         else
             if exist([options.root,options.patientname,filesep,'stimulations',filesep,ea_nt(options),label,filesep,'vat_right.nii'],'file') == 2 && exist([options.root,options.patientname,filesep,'stimulations',filesep,ea_nt(options),label,filesep,'vat_left.nii'],'file') == 2
                 nii = ea_load_nii([options.root,options.patientname,filesep,'stimulations',filesep,ea_nt(options),label,filesep,'vat_right.nii']);
@@ -221,7 +221,7 @@ if ~strcmp(options.leadprod, 'group')
                 nii = ea_load_nii([options.root,options.patientname,filesep,'stimulations',ea_nt(options),filesep,label,filesep,'vat_left.nii']);
                 vatfv = ea_niiVAT2fvVAT(nii);
     %             vatfv = ea_smoothpatch(vatfv,1,35);
-                stimparams(1,1).VAT.VAT = vatfv;
+                stimparams(1,2).VAT.VAT = vatfv;
             else
                 visualizeVAT = 0;
             end
@@ -1048,7 +1048,8 @@ ea_genvat=eval(['@',genvatfunctions{get(handles.modelselect,'Value')}]);
 stimname=S.label;
 
 for el=1:length(elstruct)
-    for side=1:length(elstruct.coords_mm)
+    for iside=1:length(options.sides)%length(elstruct.coords_mm)
+        side=options.sides(iside);
         if isfield(elstruct,'group') % group analysis, more than one electrode set
             % this should not happen, in this case the stim button is
             % hidden.
@@ -2232,6 +2233,20 @@ if get(handles.(['Ls',num2str(Ractive),'va']),'Value')==1 % Volt
 else % Ampere
     ea_show_percent(handles,options,2,'on'); % left hemisphere
 end
+
+% enable/disable panel based on sides that are present
+is_side_present=cellfun(@(x) ~isempty(x), elstruct(actpt).trajectory);%First element is R, second is L
+if is_side_present(1)==1%check if R side is present
+    set(findall(handles.uipanel2, '-property', 'enable'), 'enable', 'on')
+else
+    set(findall(handles.uipanel2, '-property', 'enable'), 'enable', 'off')
+end
+if is_side_present(2)==1%check if R side is present
+    set(findall(handles.uipanel3, '-property', 'enable'), 'enable', 'on')
+else
+    set(findall(handles.uipanel3, '-property', 'enable'), 'enable', 'off')
+end
+
 
 ea_savestimulation(S,options);
 setappdata(handles.stimfig,'S',S);

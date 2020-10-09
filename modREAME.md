@@ -66,6 +66,19 @@ in an hardcoded scheme of R for side==1 and L for side==2, in options.sides
     root/templates/electrode_models/ea_elspec_stjude_activetip_2mm.m
     root/templates/electrode_models/ea_elspec_stjude_activetip_3mm.m
 ```
+Standardized the "sides" management of these scripts (genvat and others)
+```
+    root/ea_genvat_dembek.m  
+    root/ea_genvat_kuncel.m
+    root/ea_genvat_maedler.m
+    dev/genprobmaps/ea_normsubcorticalsegm.m
+```
+and stimparams variable, enforcing that position 1 is right, and position 2 is left.
+In addition now the ea_stimparams gui disables the panel for the stimulation settings of the lead that is not present
+```
+    root/ea_stimparams.m
+```
+
 ## adding custom script loader (loaded at the init of lead.m)
 ### the script loaded is : ea_run_extra_leadinitscript.m
 here it can handle extra path requirements, such as the exclusion (now default) or inclusion of the package libstdc++.so.6 for unix systems

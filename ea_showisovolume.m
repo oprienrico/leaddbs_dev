@@ -33,17 +33,19 @@ for iside=1:length(options.sides)
     for sub=1:length(elstruct)
         for cont=1:size(options.d3.isomatrix{1},2)
             if ~isnan(options.d3.isomatrix{side}(sub,cont))
-                if ~shifthalfup
-                    X{side}(cnt)=elstruct(sub).coords_mm{side}(cont,1);
-                    Y{side}(cnt)=elstruct(sub).coords_mm{side}(cont,2);
-                    Z{side}(cnt)=elstruct(sub).coords_mm{side}(cont,3);
-                else % using pairs of electrode contacts (i.e. 3 pairs if there are 4 contacts)
-                    X{side}(cnt)=mean([elstruct(sub).coords_mm{side}(cont,1),elstruct(sub).coords_mm{side}(cont+1,1)]);
-                    Y{side}(cnt)=mean([elstruct(sub).coords_mm{side}(cont,2),elstruct(sub).coords_mm{side}(cont+1,2)]);
-                    Z{side}(cnt)=mean([elstruct(sub).coords_mm{side}(cont,3),elstruct(sub).coords_mm{side}(cont+1,3)]);
+                if ~isempty(elstruct(sub).coords_mm{side}) %if there are coordinates, parse it, otherwise skip to next
+                    if ~shifthalfup
+                        X{side}(cnt)=elstruct(sub).coords_mm{side}(cont,1);
+                        Y{side}(cnt)=elstruct(sub).coords_mm{side}(cont,2);
+                        Z{side}(cnt)=elstruct(sub).coords_mm{side}(cont,3);
+                    else % using pairs of electrode contacts (i.e. 3 pairs if there are 4 contacts)
+                        X{side}(cnt)=mean([elstruct(sub).coords_mm{side}(cont,1),elstruct(sub).coords_mm{side}(cont+1,1)]);
+                        Y{side}(cnt)=mean([elstruct(sub).coords_mm{side}(cont,2),elstruct(sub).coords_mm{side}(cont+1,2)]);
+                        Z{side}(cnt)=mean([elstruct(sub).coords_mm{side}(cont,3),elstruct(sub).coords_mm{side}(cont+1,3)]);
+                    end
+                    V{side}(cnt)=options.d3.isomatrix{side}(sub,cont);
+                    cnt=cnt+1;
                 end
-                V{side}(cnt)=options.d3.isomatrix{side}(sub,cont);
-                cnt=cnt+1;
             end
         end
     end

@@ -2284,8 +2284,8 @@ RL={'R','L'};
 for iside=1:length(options.sides)
     side=options.sides(iside);
     for Rva=1:4
-        set(handles.([RL{options.sides(side)},'s',num2str(Rva),'va']),'enable','off');
-        set(handles.([RL{options.sides(side)},'s',num2str(Rva),'va']),'value',1);
+        set(handles.([RL{side},'s',num2str(Rva),'va']),'enable','off');
+        set(handles.([RL{side},'s',num2str(Rva),'va']),'value',1);
     end
 end
 
@@ -2296,7 +2296,7 @@ RL={'R','L'};
 for iside=1:length(options.sides)
     side=options.sides(iside);
     for Rva=1:4
-        set(handles.([RL{options.sides(side)},'s',num2str(Rva),'va']),'enable','on');
+        set(handles.([RL{side},'s',num2str(Rva),'va']),'enable','on');
     end
 end
 

@@ -1,21 +1,30 @@
 ## Mod spearheaded by Enrico Opri. Emory University (2020)
-changed the following files to have support for unilateral (DBS) leads:
+changed the following files to have support for unilateral (DBS) leads (and other bugfixes as listed below):
     
 ## improving handling of elmodel
-### added new helper elmodel=ea_get_unique_elmodel(reco.props)
+Added new helper elmodel=ea_get_unique_elmodel(reco.props)
 ```
     root/helpers/gui/ea_load_pts.m
     root/ea_load_reconstruction.m
     root/templates/electrode_models/ea_resolve_elspec.m
 
-    root/ea_write_planes.m   -> the coord cell array is set to fill out the empty coordinates with NaN, to ensure compatibility with ea_sample_slice.m
+    root/ea_writeplanes.m   -> the coord cell array is set to fill out the empty coordinates with NaN, to ensure compatibility with ea_sample_slice.m
     root/ea_sample_slice.m   -> modification was not strictly necessary, but done to ensure compatibility
+```
+To manage the case where not both sides (R and L) are present in elstruct (e.g. coords_mm), I've added ea_elstruct_match_and_nanfill.m, to get an appropriate output from ea_ave_elstruct.m
+This enables correct generation of 2D slices in ea_writeplanes.m
+```
+    root/ea_writeplanes.m
 ```
 fixed handling of statistics warnings in the unilateral case (which lead dbs sees as missing side==1, Right side, making part of the code fail). 
 ```
     root/ea_showatlas.m
 ```
+
+
 ## changed handling of options.sides
+#### issue of reference
+https://github.com/netstim/leaddbs/pull/67
 ```
     TO TEST WELL: ea_calc_vatstats.m
 

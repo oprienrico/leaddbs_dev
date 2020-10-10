@@ -1,7 +1,7 @@
 ## Mod spearheaded by Enrico Opri. Emory University (2020)
 changed the following files to have support for unilateral (DBS) leads (and other bugfixes as listed below):
     
-## improving handling of elmodel
+## Improving handling of elmodel
 Added new helper elmodel=ea_get_unique_elmodel(reco.props)
 ```
     root/helpers/gui/ea_load_pts.m
@@ -22,7 +22,7 @@ fixed handling of statistics warnings in the unilateral case (which lead dbs see
 ```
 
 
-## changed handling of options.sides
+## Changed handling of options.sides
 #### issue of reference
 https://github.com/netstim/leaddbs/pull/67
 ```
@@ -94,21 +94,28 @@ This enables correct generation of 2D slices in ea_writeplanes.m
 ```
 Changed how export vatmapping searches always for both sides .nii files.
 ```
-    ea_exportvatmapping.m
-    predict/ea_getXvat.m
+    root/ea_exportvatmapping.m
+    root/predict/ea_getXvat.m
 ```
 
 
-## adding custom script loader (loaded at the init of lead.m)
-### the script loaded is : ea_run_extra_leadinitscript.m
-here it can handle extra path requirements, such as the exclusion (now default) or inclusion of the package libstdc++.so.6 for unix systems
+## Added new script to run extra configurations that are specific to the platform currently in use (loaded at the init of lead.m)
+here it can handle extra path requirements, or other platform related customizations, such as the exclusion (which is the new default) or inclusion of the package libstdc++.so.6 for unix systems.
 ```
- (un) loaded by : ea_run_extra_leadinitscript.m
+    root/ea_run_extra_machinespecific_init.m
 ```
-The preferred action is to install the package matlab-support (on linux/ubuntu), and choose to use system libraries/renaming matlab ones. This is to use a complete toolchain that is fully available in the system.
+which follows the new prefs.platform.* prefs in the updated:
+```
+    root/common/ea_prefs_default.m
+```
+For this library (libstdc++.so.6) the preferred action is to use the toolchain that is already available in the system (e.g. using packaged build-essentials). Preferrably, also install the package matlab-support (on linux/ubuntu), and choose to use system libraries/renaming matlab ones.
+This is set by the new preference line:
+```
+    prefs.platform.unix.load_shipped_libstdcpp6=false;
+```
 
 
-## bugfix for meshresample in the iso2mesh toolbox
+## Bugfix for meshresample in the iso2mesh toolbox
 ### used by vatmodel
 The issue is caused by part of the code that uses matlab's reducepath before running meshresample.
 Matlab's reducepath can cause an output that is non-manifold, even if the input is manifold.

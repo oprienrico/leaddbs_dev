@@ -82,8 +82,8 @@ ea_checkspm;
 % check existence of directories
 ea_checkleaddirs;
 
-% run extra script for custom commands
-ea_run_extra_leadinitscript;
+% run extra configurations specific to the platform currently in use
+ea_run_extra_machinespecific_init;
 
 % check for commands first
 if nargin == 4

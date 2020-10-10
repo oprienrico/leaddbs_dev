@@ -78,6 +78,17 @@ In addition now the ea_stimparams gui disables the panel for the stimulation set
 ```
     root/ea_stimparams.m
 ```
+To manage the case where not both sides (R and L) are present in elstruct (e.g. coords_mm), I've added ea_elstruct_match_and_nanfill.m, to get an appropriate output from ea_ave_elstruct.m
+This enables correct generation of 2D slices in ea_writeplanes.m
+```
+    root/ea_writeplanes.m
+```
+Changed how export vatmapping searches always for both sides .nii files.
+```
+    ea_exportvatmapping.m
+    predict/ea_getXvat.m
+```
+
 
 ## adding custom script loader (loaded at the init of lead.m)
 ### the script loaded is : ea_run_extra_leadinitscript.m
@@ -95,7 +106,14 @@ Matlab's reducepath can cause an output that is non-manifold, even if the input 
 This causes issues in the CGAL tool "cgalsimp2" used for the resampling in the iso2mex.
 The bugfix is to ensure that the input is manifold, by forcing the meshcheckrepair within meshresample, which repairs the mesh ensuring the manifold condition.
 I've also left alternative code (currently not used) to execute meshresample based only on reducepath, but repairing the output to ensuring the manifold condition.
-
-Changed: 
+```
     root/ext_libs/iso2mesh/meshresample.m
     root/vatmodel/ea_mesh_electrode.m -> just left a note/comment
+```
+
+
+## Minor electrode naming fix
+ea_resolve_elspec.m, model 3389 had "R_K11 (L)" instead of just "K11 (L)"
+```
+    root/templates/electrode_models/ea_resolve_elspec.m
+```

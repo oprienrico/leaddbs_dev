@@ -32,9 +32,17 @@ if nargin==1
     clear coords_mm
     elstruct(1).coords_mm=ave_coords_mm; % if there is only one patient to show, ave_coords_mm are the same as the single entry in elstruct(1).coords_mm.
 
+    %fill missing sides with nans, matching it to the other present side.
+    %At least one side should be present, which should be always the case.
+    elstruct=ea_elstruct_match_and_nanfill(elstruct);
+        
 elseif nargin>1 % elstruct has been supplied, this is a group visualization
     if isstruct(varargin{2})
         elstruct=varargin{2};
+        %fill missing sides with nans, matching it to the other present
+        %side. At least one side should be present, which should be always
+        %the case.
+        elstruct=ea_elstruct_match_and_nanfill(elstruct);
         % average coords_mm for image slicing
         ave_coords_mm=ea_ave_elstruct(elstruct,options);
     else % concrete height is being supplied (without electrode star plotting).
@@ -72,32 +80,9 @@ else
 end
 
 if isstruct(elstruct)
-    coords={};
-    %find maximum side of coordinates (3 columns by ?? rows/contacts)
-    num_contacts=nan;
-    num_axes=nan;
-    for iside=1:length(ave_coords_mm)
-        side=iside;%just for readability, as this is the side
-        if ~isempty(ave_coords_mm{side})
-            num_contacts=size(ave_coords_mm{side},1);
-            num_axes=size(ave_coords_mm{side},2);
-            break;
-        end
-    end
-    if isnan(num_contacts) || isnan(num_axes)
-        error('This should not happen, is there no electrode set yet? Remember to run the electrode/lead reconstruction first (Panel 5)');
-    end
-    
-    for iside=1:length(ave_coords_mm)
-        %side=options.sides(iside);
-        side=iside;%just for readability, as this is the side
-        if ~isempty(ave_coords_mm{side})
-            coords{side}=Vtra.mat\[ave_coords_mm{side},ones(size(ave_coords_mm{side},1),1)]';
-            coords{side}=coords{side}(1:3,:)';
-        else
-            %fill with nans, to leave a placeholder for no contact/electrode/lead
-            coords{side}=nan(num_contacts,num_axes);
-        end
+    for side=1:length(ave_coords_mm)
+        coords{side}=Vtra.mat\[ave_coords_mm{side},ones(size(ave_coords_mm{side},1),1)]';
+        coords{side}=coords{side}(1:3,:)';
     end
 else
     elstruct=[elstruct,1]';
@@ -154,7 +139,11 @@ for iside=1:length(options.sides)
             %title(['Electrode ',num2str(el-1),', transversal view.']);
 
             [slice,~,boundboxmm,sampleheight]=ea_sample_slice(V,dstring,options.d2.bbsize,'mm',coords,el);
-
+            if length(slice)==1 && isnan(slice)
+                %there was no electrode here, skip this slice
+                continue;
+            end
+            
             cont=1;
             try                cont=evalin('base','custom_cont'); end
             offs=1;
@@ -177,10 +166,10 @@ for iside=1:length(options.sides)
 
             try                level=evalin('base','level_offset'); end
 
-
-            disp(['Electrode(s) k',num2str(el-1),', ',dstring,' view: ',lstring,'',num2str(sampleheight),' mm.']);
+            printstr_el_stat=['Electrode(s) k',num2str(el-1),'/',options.elspec.contactnames{el} ', ',dstring,' view: ',lstring,'',num2str(sampleheight),' mm.'];
+            disp(printstr_el_stat);
             if fid>0 % only if file exists (does sometimes not exist if called from lead anatomy or the slice-cuts feature of elvis)
-                fprintf(fid,'%s\n',['Electrode(s) k',num2str(el-1),', ',dstring,' view: ',lstring,'',num2str(sampleheight),' mm.']);
+                fprintf(fid,'%s\n',printstr_el_stat);
             end
             set(0,'CurrentFigure',cuts)
 

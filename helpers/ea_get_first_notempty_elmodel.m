@@ -1,5 +1,5 @@
-function elmodel=ea_get_unique_elmodel(reco___props)
-    % elmodel=ea_get_unique_elmodel(reco.props)
+function elmodel=ea_get_first_notempty_elmodel(reco___props)
+    % elmodel=ea_get_first_notempty_elmodel(reco.props)
     % Copyright (C) 2020 Emory University, USA, School of Medicine
     % Enrico Opri
 

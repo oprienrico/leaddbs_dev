@@ -2236,7 +2236,7 @@ end
 
 % enable/disable panel based on sides that are present
 %is_side_present=cellfun(@(x) ~isempty(x)), elstruct(actpt).trajectory);%First element is R, second is L
-is_side_present=cellfun(@(x) ~isempty(x) && ~all(isnan(x(:))), elstruct(actpt).trajectory);%First element is R, second is L
+is_side_present=cellfun(@(x) ~ea_arenopoints4side(x), elstruct(actpt).trajectory);%First element is R, second is L
 if is_side_present(1)==1%check if R side is present
     set(findall(handles.uipanel2, '-property', 'enable'), 'enable', 'on')
 else

@@ -243,7 +243,7 @@ for nativemni=nm % switch between native and mni space atlases.
                         end
 
                         for el=1:length(elstruct)
-                            if isempty(ea_stats.electrodes(el).coords_mm{side})
+                            if ea_arenopoints4side(ea_stats.electrodes(el).coords_mm{side})
                                 if side==1
                                     %warning_printf=@(str_in) warning(str_in);
                                     warning_printf=@(str_in) fprintf(['ATTENTION!! : ' str_in '\n']);

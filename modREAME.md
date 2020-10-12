@@ -2,7 +2,7 @@
 changed the following files to have support for unilateral (DBS) leads (and other bugfixes as listed below):
     
 ## Improving handling of elmodel
-Added new helper elmodel=ea_get_unique_elmodel(reco.props)
+Added new helper elmodel=ea_get_first_notempty_elmodel(reco.props)
 ```
     root/helpers/gui/ea_load_pts.m
     root/ea_load_reconstruction.m

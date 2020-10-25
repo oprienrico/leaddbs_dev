@@ -2154,6 +2154,9 @@ axis equal;
 %% check consistency with chosen VAT model.
 %% check consistency with chosen electrode model.
 if ~isfield(options,'elspec')
+    if isempty(elstruct(actpt).elmodel)
+        error('Model is empty. Was the electrode segmentation fully executed in single patient mode?')
+    end
     toptions=ea_resolve_elspec(elstruct(actpt));
     try
         options.elspec=toptions.elspec;

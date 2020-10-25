@@ -34,9 +34,16 @@ elmodel=[];
 if ~isfield(options, 'elmodel')
     try
         load([options.root,options.patientname,filesep,'ea_reconstruction.mat']);
-        %elmodel = reco.props(1).elmodel;
+    catch
+        error(sprintf('could not load the ea_recostruction.mat at: %s',[options.root,options.patientname,filesep,'ea_reconstruction.mat']));
+    end
+    %elmodel = reco.props(1).elmodel;
+    try
         elmodel=ea_get_first_notempty_elmodel(reco.props);
     catch
+        error(sprintf('failed to parse a valid model: %s',reco.props(end).elmodel));
+    end
+    if isempty(elmodel)
         %no model was found
         warning('No electrode model specified. Using Medtronic 3389.');
         elmodel = 'Medtronic 3389';        
@@ -44,6 +51,10 @@ if ~isfield(options, 'elmodel')
     
 else
     elmodel = options.elmodel;
+    
+    if isempty(elmodel)
+        error('elmodel cannot be empty');
+    end
 end
 
 switch elmodel

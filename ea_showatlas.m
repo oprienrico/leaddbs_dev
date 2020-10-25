@@ -243,11 +243,11 @@ for nativemni=nm % switch between native and mni space atlases.
                         end
 
                         for el=1:length(elstruct)
-                            if ea_arenopoints4side(ea_stats.electrodes(el).coords_mm{side})
+                            if ea_arenopoints4side(ea_stats.electrodes(el).coords_mm,side)
+                                %warning_printf=@(str_in) warning(str_in);
+                                warning_printf=@(str_in) fprintf(['ATTENTION!! : ' str_in '\n']);
+                                
                                 if side==1
-                                    %warning_printf=@(str_in) warning(str_in);
-                                    warning_printf=@(str_in) fprintf(['ATTENTION!! : ' str_in '\n']);
-                                    
                                     warning_printf(['Statistics for right ' atlases.names{atlas} ' will not be computed as there is no lead in the right side.']);
                                 elseif side==2
                                     warning_printf(['Statistics for left ' atlases.names{atlas} ' side will not be computed as there is no lead in the left side.']);

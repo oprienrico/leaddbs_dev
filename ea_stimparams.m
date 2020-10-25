@@ -2239,13 +2239,13 @@ end
 
 % enable/disable panel based on sides that are present
 %is_side_present=cellfun(@(x) ~isempty(x)), elstruct(actpt).trajectory);%First element is R, second is L
-is_side_present=cellfun(@(x) ~ea_arenopoints4side(x), elstruct(actpt).trajectory);%First element is R, second is L
-if is_side_present(1)==1%check if R side is present
+is_side_present=arrayfun(@(xside) ~ea_arenopoints4side(elstruct(actpt).trajectory, xside), [1,2]);%First element is R, second is L
+if is_side_present(1)>0%check if R side is present
     set(findall(handles.uipanel2, '-property', 'enable'), 'enable', 'on')
 else
     set(findall(handles.uipanel2, '-property', 'enable'), 'enable', 'off')
 end
-if length(is_side_present)>1 && is_side_present(2)==1%check if L side is present
+if is_side_present(2)>0%check if L side is present
     set(findall(handles.uipanel3, '-property', 'enable'), 'enable', 'on')
 else
     set(findall(handles.uipanel3, '-property', 'enable'), 'enable', 'off')

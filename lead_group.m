@@ -909,6 +909,17 @@ for pt=selection
     catch
         options.d3.isomatrix={};
     end
+    try
+        options.d3.isomatrix_name=M.isomatrix_name;
+    catch
+        options.d3.isomatrix_name={};
+    end
+    options.normregressor=M.ui.normregpopup;
+    for reg=1:length(options.d3.isomatrix)
+        try
+            options.d3.isomatrix{reg}=ea_reformat_isomatrix(options.d3.isomatrix{reg},M,options);
+        end
+    end
 
     options.d3.isovscloud=M.ui.isovscloudpopup;
     options.d3.showisovolume=M.ui.showisovolumecheck;
@@ -996,7 +1007,10 @@ for pt=selection
             ea_error(['Stimulation parameters for ',M.patient.list{pt},' are missing.']);
         end
         vfnames=getappdata(handles.leadfigure,'vatfunctionnames');
-
+        if isempty(M.vatmodel)
+            warning(sprintf('Did not specify the VAT model for each subject. Make sure you set the Stimulation Parameters.\nAbort!!'));
+            return
+        end
         [~,ix]=ismember(M.vatmodel,vfnames);
         vfs=getappdata(handles.leadfigure,'genvatfunctions');
         try

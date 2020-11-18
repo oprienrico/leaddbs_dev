@@ -97,6 +97,35 @@ for nativemni=nm % switch between native and mni space atlases.
 
     % prepare stats fields
     if options.writeoutstats
+        
+        %reset previous stats
+        ea_stats.conmat={};
+        ea_stats.conmat_inside_vox={};
+        ea_stats.conmat_inside_hull={};
+        ea_stats.patname={};
+        ea_stats.atlases.names={};
+        ea_stats.atlases.types={};
+        ea_stats.electrodes=[];
+        
+        for el=1:length(elstruct)
+            miss_side=2;%check only if L side is missing. 
+            if ea_arenopoints4side(elstruct(el).coords_mm, miss_side)
+                %if the right side is missing, it will be already be "filled" with an empty or NaN array
+                %force to have empty values if side is not present (e.g. in R only case)
+                elstruct(el).coords_mm{miss_side}={};
+                if ~isnan(elstruct(el).coords_acpc)
+                    elstruct(el).coords_acpc{miss_side}={};
+                end
+                elstruct(el).trajectory{miss_side}={};
+                
+                %this will create a second structure
+                elstruct(el).markers(miss_side).head=[];
+                elstruct(el).markers(miss_side).tail=[];
+                elstruct(el).markers(miss_side).x=[];
+                elstruct(el).markers(miss_side).y=[];
+            end
+        end
+        
         for el=1:length(elstruct)
             %for side=1:length(elstruct(el).coords_mm)
             for iside=1:length(elstruct(el).coords_mm)

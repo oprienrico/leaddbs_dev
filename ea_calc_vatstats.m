@@ -211,11 +211,18 @@ for iside=1:length(options.sides)
                             end
 
                             vatfile = ea_niigz([options.root,options.patientname,filesep,'stimulations',filesep,ea_nt(options),S.label,filesep,'vat_',sidec]);
-                            voxsize = prod(ea_detvoxsize(vatfile));
 
-                            ea_stats.stimulation(thisstim).vat(side,vat).AtlasIntersection(atlas)=ea_vta_overlap(vatfile,atlasfile,sidec).*voxsize;
+                            [vox_overlap, mm_overlap, vox_vat, mm_vat, mm_atlas] = ea_vta_overlap(vatfile,atlasfile,sidec);
+                            ea_stats.stimulation(thisstim).vat(side,vat).AtlasIntersection(atlas)=mm_overlap;
                             ea_stats.stimulation(thisstim).vat(side,vat).nAtlasIntersection(atlas)=ea_stats.stimulation(thisstim).vat(side,vat).AtlasIntersection(atlas)/stimparams(1,side).volume(vat);
-
+                            
+                            ea_stats.stimulation(thisstim).vat(side,vat).AtlasVolume(atlas)=mm_atlas;
+                            ea_stats.stimulation(thisstim).vat(side,vat).VATVolume=mm_vat;
+                            
+                            %get overlap in respect of:  
+                            ea_stats.stimulation(thisstim).vat(side,vat).AtlasIntersection_pAtlas(atlas)=mm_overlap./mm_atlas;%overlap in respect of atlas (ratio [0-1])
+                            ea_stats.stimulation(thisstim).vat(side,vat).AtlasIntersection_pVAT(atlas)=mm_overlap./mm_vat;%overlap in respect of VAT (ratio [0-1])
+                            
                             % now also add efield overlap:
                             if exist('vefieldfile','var')
                                 ea_stats.stimulation(thisstim).efield(side,vat).AtlasIntersection(atlas)=ea_vta_overlap(vefieldfile,atlasfile,sidec);

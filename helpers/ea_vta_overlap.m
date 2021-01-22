@@ -1,7 +1,7 @@
-function overlap = ea_vta_overlap(vta, atlas, side)
+function [vox_overlap, mm_overlap, vox_vat, mm_vat, mm_atlas] = ea_vta_overlap(vta, atlas, side)
 % Calculate the overlap between VTA and atlases (nifti or xyz coordinates)
 %
-% Return the overlap in VOXEL (NOT IN MM^3)
+%  vox_ is in VOXEL, mm_ is in MM^3
 
 % Split left/right side of the atlas
 if ~exist('side', 'var')
@@ -18,7 +18,8 @@ elseif isnumeric(side)
     end
 end
 
-overlap = 0;
+vox_overlap = 0;
+mm_overlap = 0;
 
 % Load VTA image
 vtanii = load_untouch_nii(vta);
@@ -34,6 +35,7 @@ else % Input vta is vat_[right|left].nii
     threshold_vta = max(vtanii.img(:)) * 0.5;
     vtanii.img = double(vtanii.img>threshold_vta);
 end
+vat_voxsize = prod(ea_detvoxsize(vta));
 
 % Check if atlas is nifti file or xyz coordinates
 if isnumeric(atlas)
@@ -45,6 +47,7 @@ elseif isfile(atlas)
     [xvox, yvox, zvox] = ind2sub(size(atlasnii.img), find(atlasnii.img(:)));
     xyz = ea_vox2mm([xvox, yvox, zvox], atlas);
 end
+atlas_voxsize = prod(ea_detvoxsize(atlas));
 
 % Only calculate for one side, suppose RAS orientation
 switch side
@@ -54,6 +57,11 @@ switch side
         xyz = xyz(xyz(:,1)<0,:);
 end
 
+
+vox_vat=sum(vtanii.img(:)>0);%store the number of voxels contained in the VTA/efield
+mm_vat=vox_vat.*vat_voxsize;%store in mm too
+mm_atlas=sum(atlasnii.img(:)>0).*atlas_voxsize;%store the atlas volume used in the overlap (in mm) too
+
 if ~isempty(xyz)
     % Map XYZ coordinates into VTA image
     vox = round(ea_mm2vox(xyz, vta));
@@ -62,6 +70,8 @@ if ~isempty(xyz)
         vox = vox(filter, :);
         ind = unique(sub2ind(size(vtanii.img), vox(:,1), vox(:,2), vox(:,3)));
         % Checking overlap for image1
-        overlap = sum(vtanii.img(ind));
+        vox_overlap = sum(vtanii.img(ind));
+        
+        mm_overlap=vox_overlap.*vat_voxsize;
     end
 end
